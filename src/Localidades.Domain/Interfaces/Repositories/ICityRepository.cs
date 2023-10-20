@@ -15,5 +15,5 @@ public interface ICityRepository
     Task<int> CountCitites();
     Task<int> CountCititesByState(string siglaUF);
     Task<List<Municipio>> GetAllCities(int skip = -1, int take = -1);
-    void BulkInsertion(List<Municipio> municipios);
+    Task BulkInsertion(List<Municipio> municipios);
 }

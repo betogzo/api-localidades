@@ -20,7 +20,7 @@ namespace Localidades.Infrastructure.Repositories.Implementations
             x.CodigoIBGE == municipio.CodigoIBGE || 
             x.NomeMunicipio == municipio.NomeMunicipio);
 
-        public async void BulkInsertion(List<Municipio> municipios)
+        public async Task BulkInsertion(List<Municipio> municipios)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
