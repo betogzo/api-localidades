@@ -107,7 +107,7 @@ public static class UploadEndpoint
             .Where(excelCity => !cidadesBanco.Any(dbCity => dbCity.CodigoIBGE == excelCity.CodigoIBGE))
             .ToList();
 
-        citiesRepository.BulkInsertion(municipiosASeremGravados);
+        await citiesRepository.BulkInsertion(municipiosASeremGravados);
 
         return true;
     }
