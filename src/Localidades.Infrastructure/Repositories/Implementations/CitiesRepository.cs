@@ -22,15 +22,15 @@ namespace Localidades.Infrastructure.Repositories.Implementations
 
         public async Task BulkInsertion(List<Municipio> municipios)
         {
-            using var transaction = _context.Database.BeginTransaction();
+            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 await _context.BulkInsertAsync(municipios);
-                transaction.Commit();
+                await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
+                await transaction.RollbackAsync();
                 throw new Exception(ex.Message);
             }
         }
