@@ -54,7 +54,7 @@ Você pode usar a planilha Excel presente na pasta "assets" deste repositório p
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para detalhes.
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
 
 
 
