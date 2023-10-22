@@ -9,7 +9,7 @@ Este projeto foi desenvolvido para participar do Desafio Dotnet organizado pelo 
 
 ## 📖 Documentação da API
 
-[Clique aqui](https://api-localidades.azurewebsites.net/swagger/index.html) para acessar a documentação da API no Swagger.  
+[Clique aqui](https://api-localidades.azurewebsites.net/swagger/index.html) para acessar a documentação da API no Swagger. (pode levar alguns segundos pra abrir devido ao tier free da Azure)
 
 ## 🚀 Começando
 
