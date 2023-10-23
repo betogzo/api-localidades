@@ -27,11 +27,11 @@ public static class CityEndpoints
                                 o response retornará todos os municípios cadastrados. Esta rota retorna dados paginados. Valores aceitos: Take = min.: 0 máx.: 250 / Skip = min.: 0",
             });
 
-        app.MapPatch("/api/v1/municipios", UpdateCity)
+        app.MapPatch("/api/v1/municipios/{codigoIBGE}", UpdateCity)
             .AddEndpointFilter<ValidationFilter<UpdateCityViewModel>>()
             .RequireAuthorization(Roles.Admin);
 
-        app.MapDelete("/api/v1/municipios", DeleteCity)
+        app.MapDelete("/api/v1/municipios/{codigoIBGE}", DeleteCity)
             .RequireAuthorization(Roles.Admin);
 
         return app;
