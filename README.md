@@ -1,4 +1,3 @@
-
 # API Localidades
 
 API para cadastro e consulta de estados e municípios brasileiros.  
@@ -6,6 +5,17 @@ API para cadastro e consulta de estados e municípios brasileiros.
 ## ✅ Propósito deste projeto
 
 Este projeto foi desenvolvido para participar do Desafio Dotnet organizado pelo [André Baltieri](https://github.com/andrebaltieri) da plataforma de ensino [balta.io](https://balta.io/). O objetivo era entregar uma Minimal API com C# e .NET 7 ou superior, seguindo uma lista de requisitos, se utilizando de boas práticas de desenvolvimento, documentação e também testes unitários. Apesar de ser uma aplicação relativamente pequena e simples em termos de funcionalidades, contém conceitos e tecnologias com as quais eu não era familiarizado, o que trouxe muitos desafios e consequentemente muito aprendizado. Agradecimentos ao Balta!  
+
+## 🏷️ Features
+
+Autenticação e autorização com JWT e Claims;  
+Validações de dados;  
+Respostas padronizadas e paginadas;   
+Busca de Estados e Municípios por diversos parâmetros;   
+Cache;  
+Documentação completa com Swagger;   
+Tratamento global de exceções;  
+Cadastro de estados e municípios através de upload de arquivo *.xlsx ou *.xls (Excel);  
 
 ## 📖 Documentação da API
 
