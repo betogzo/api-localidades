@@ -30,6 +30,12 @@ dotnet restore
 dotnet run
 ```
 
+🗄️ Você pode crirar a estrutura inicial da base de dados rodando a migration do EF Core com o comando:
+
+```
+dotnet ef database update
+```  
+
 ### ⚙️ Executando os testes
 
 ```
