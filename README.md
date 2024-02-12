@@ -17,10 +17,6 @@ Documentação completa com Swagger;
 Tratamento global de exceções;  
 Cadastro de estados e municípios através de upload de arquivo *.xlsx ou *.xls (Excel);  
 
-## 📖 Documentação da API
-
-[Clique aqui](https://api-localidades.azurewebsites.net/swagger/index.html) para acessar a documentação da API no Swagger (pode levar alguns segundos pra abrir devido ao tier free da Azure).
-
 ## 🚀 Começando
 
 Sinta-se à vontade para clonar, usar e alterar o projeto como quiser.
