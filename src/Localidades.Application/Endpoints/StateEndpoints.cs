@@ -61,25 +61,25 @@ public static class StateEndpoints
 
         if (!String.IsNullOrEmpty(codigoEstado))
         {
-            resultado.Add(await statesRepository.GetByCodigoUF(codigoEstado));
-            if (resultado.Any()) TypedResults.Ok(new ResultViewModel<List<Estado>>(resultado));
+            var porCodigo = await statesRepository.GetByCodigoUF(codigoEstado);
+            if (porCodigo is not null) resultado.Add(porCodigo);
         }
         else if (!String.IsNullOrEmpty(siglaEstado))
         {
-            resultado.Add(await statesRepository.GetBySiglaUF(siglaEstado));
-            if (resultado.Any()) TypedResults.Ok(new ResultViewModel<List<Estado>>(resultado));
+            var porSigla = await statesRepository.GetBySiglaUF(siglaEstado);
+            if (porSigla is not null) resultado.Add(porSigla);
         }
         else if (!String.IsNullOrEmpty(nomeEstado))
         {
-            resultado.Add(await statesRepository.GetByNomeUF(nomeEstado));
-            if (resultado.Any()) TypedResults.Ok(new ResultViewModel<List<Estado>>(resultado));
+            var porNome = await statesRepository.GetByNomeUF(nomeEstado);
+            if (porNome is not null) resultado.Add(porNome);
         }
         else
         {
             resultado = await statesRepository.GetAllEstados();
         }
 
-        return resultado.Any() ? TypedResults.Ok(new ResultViewModel<List<Estado>>(resultado)) : TypedResults.NotFound();
+        return resultado.Count > 0 ? TypedResults.Ok(new ResultViewModel<List<Estado>>(resultado)) : TypedResults.NotFound();
     }
 
     internal static async Task<Results<NotFound, Ok<ResultViewModel<Estado>>>> UpdateState(

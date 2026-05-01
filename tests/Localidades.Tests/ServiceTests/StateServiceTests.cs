@@ -1,4 +1,5 @@
-﻿using Localidades.Application.ViewModels.ResultsViewModels;
+﻿using Localidades.Application.Endpoints;
+using Localidades.Application.ViewModels.ResultsViewModels;
 using Localidades.Application.ViewModels.StateViewModels;
 using Localidades.Application.ViewModels.Validators.State;
 using Localidades.Domain.Interfaces.Repositories;
@@ -25,7 +26,7 @@ public class StateServiceTests
         mockRepo.Setup(repo => repo.AlreadyExists(It.IsAny<Estado>())).ReturnsAsync(true);
 
         // Act
-        var result = await Application.Endpoints.StateEndpoints.CreateState(mockRepo.Object, inputState);
+        var result = await StateEndpoints.CreateState(mockRepo.Object, inputState);
 
         // Assert
         Assert.IsType<Conflict<ResultViewModel<string>>>(result.Result);
@@ -43,9 +44,9 @@ public class StateServiceTests
         };
 
         mockRepo.Setup(repo => repo.AlreadyExists(It.IsAny<Estado>())).ReturnsAsync(false);
-        mockRepo.Setup(repo => repo.Create(It.IsAny<Estado>())).ReturnsAsync(true); // ou o retorno correto se for diferente
+        mockRepo.Setup(repo => repo.Create(It.IsAny<Estado>())).ReturnsAsync(true);
 
-        var result = await Application.Endpoints.StateEndpoints.CreateState(mockRepo.Object, inputState);
+        var result = await StateEndpoints.CreateState(mockRepo.Object, inputState);
 
         Assert.IsType<Created<ResultViewModel<Estado>>>(result.Result);
     }
