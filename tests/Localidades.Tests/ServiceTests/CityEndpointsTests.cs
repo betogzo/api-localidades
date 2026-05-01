@@ -195,4 +195,202 @@ public class CityEndpointsTests
 
         Assert.IsType<NoContent>(result.Result);
     }
+
+    [Fact]
+    public async Task GetCities_ReturnsOk_WhenCodigoIBGEFound()
+    {
+        var municipio = new Municipio
+        {
+            CodigoIBGE = "3550308",
+            NomeMunicipio = "São Paulo",
+            Estado = new Estado { NomeUF = "São Paulo", SiglaUF = "SP" }
+        };
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.GetByCodigoIBGE("3550308")).ReturnsAsync(municipio);
+
+        var result = await CityEndpoints.GetCities(repo.Object, "3550308", null, null, 0, 250);
+
+        Assert.IsType<Ok<PagedResultViewModel<List<GetCityResponseViewModel>>>>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetCities_ReturnsNotFound_WhenCodigoIBGENotFound()
+    {
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.GetByCodigoIBGE("0000000"))!.ReturnsAsync((Municipio?)null);
+
+        var result = await CityEndpoints.GetCities(repo.Object, "0000000", null, null, 0, 250);
+
+        Assert.IsType<NotFound>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetCities_ReturnsOk_WhenNameAndStateFound()
+    {
+        var municipio = new Municipio
+        {
+            CodigoIBGE = "3550308",
+            NomeMunicipio = "São Paulo",
+            Estado = new Estado { NomeUF = "São Paulo", SiglaUF = "SP" }
+        };
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.GetByNameAndState("São Paulo", "SP"))
+            .ReturnsAsync(new List<Municipio> { municipio });
+
+        var result = await CityEndpoints.GetCities(repo.Object, null, "SP", "São Paulo", 0, 250);
+
+        Assert.IsType<Ok<PagedResultViewModel<List<GetCityResponseViewModel>>>>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetCities_ReturnsNotFound_WhenNameAndStateEmpty()
+    {
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.GetByNameAndState("X", "ZZ")).ReturnsAsync(new List<Municipio>());
+
+        var result = await CityEndpoints.GetCities(repo.Object, null, "ZZ", "X", 0, 250);
+
+        Assert.IsType<NotFound>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetCities_ReturnsOk_WhenStateFound()
+    {
+        var municipio = new Municipio
+        {
+            CodigoIBGE = "3550308",
+            NomeMunicipio = "São Paulo",
+            Estado = new Estado { NomeUF = "São Paulo", SiglaUF = "SP" }
+        };
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.CountCititesByState("SP")).ReturnsAsync(1);
+        repo.Setup(r => r.GetAllCitiesBySiglaUF("SP", 0, 250))
+            .ReturnsAsync(new List<Municipio> { municipio });
+
+        var result = await CityEndpoints.GetCities(repo.Object, null, "SP", null, 0, 250);
+
+        Assert.IsType<Ok<PagedResultViewModel<List<GetCityResponseViewModel>>>>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetCities_ReturnsNotFound_WhenStateEmpty()
+    {
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.CountCititesByState("ZZ")).ReturnsAsync(0);
+        repo.Setup(r => r.GetAllCitiesBySiglaUF("ZZ", 0, 250)).ReturnsAsync(new List<Municipio>());
+
+        var result = await CityEndpoints.GetCities(repo.Object, null, "ZZ", null, 0, 250);
+
+        Assert.IsType<NotFound>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetCities_ReturnsOk_WhenNameOnlyFound()
+    {
+        var municipio = new Municipio
+        {
+            CodigoIBGE = "3550308",
+            NomeMunicipio = "São Paulo",
+            Estado = new Estado { NomeUF = "São Paulo", SiglaUF = "SP" }
+        };
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.GetByName("São Paulo"))
+            .ReturnsAsync(new List<Municipio> { municipio });
+
+        var result = await CityEndpoints.GetCities(repo.Object, null, null, "São Paulo", 0, 250);
+
+        Assert.IsType<Ok<PagedResultViewModel<List<GetCityResponseViewModel>>>>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetCities_ReturnsNotFound_WhenNameOnlyEmpty()
+    {
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.GetByName("Inexistente")).ReturnsAsync(new List<Municipio>());
+
+        var result = await CityEndpoints.GetCities(repo.Object, null, null, "Inexistente", 0, 250);
+
+        Assert.IsType<NotFound>(result.Result);
+    }
+
+    [Fact]
+    public async Task UpdateCity_UpdatesCodigoIBGE_WhenProvided()
+    {
+        var existente = new Municipio
+        {
+            CodigoIBGE = "3550308",
+            NomeMunicipio = "São Paulo",
+            Estado = new Estado { SiglaUF = "SP", NomeUF = "SP" }
+        };
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.GetByCodigoIBGE("3550308")).ReturnsAsync(existente);
+        repo.Setup(r => r.Update(It.IsAny<Municipio>())).ReturnsAsync(true);
+        var body = new UpdateCityViewModel { CodigoIBGE = "3550309" };
+
+        var result = await CityEndpoints.UpdateCity(repo.Object, "3550308", body);
+
+        var ok = Assert.IsType<Ok<ResultViewModel<Municipio>>>(result.Result);
+        Assert.Equal("3550309", ok.Value?.Data?.CodigoIBGE);
+    }
+
+    [Fact]
+    public async Task UpdateCity_TrimsNomeMunicipio_WhenProvided()
+    {
+        var existente = new Municipio
+        {
+            CodigoIBGE = "3550308",
+            NomeMunicipio = "São Paulo",
+            Estado = new Estado { SiglaUF = "SP", NomeUF = "SP" }
+        };
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.GetByCodigoIBGE("3550308")).ReturnsAsync(existente);
+        repo.Setup(r => r.Update(It.IsAny<Municipio>())).ReturnsAsync(true);
+        var body = new UpdateCityViewModel { NomeMunicipio = "  Santos  " };
+
+        var result = await CityEndpoints.UpdateCity(repo.Object, "3550308", body);
+
+        var ok = Assert.IsType<Ok<ResultViewModel<Municipio>>>(result.Result);
+        Assert.Equal("Santos", ok.Value?.Data?.NomeMunicipio);
+    }
+
+    [Fact]
+    public async Task UpdateCity_SetsModificadoEm_WhenUpdated()
+    {
+        var existente = new Municipio
+        {
+            CodigoIBGE = "3550308",
+            NomeMunicipio = "São Paulo",
+            Estado = new Estado { SiglaUF = "SP", NomeUF = "SP" },
+            ModificadoEm = DateTime.MinValue
+        };
+        var repo = new Mock<ICityRepository>();
+        repo.Setup(r => r.GetByCodigoIBGE("3550308")).ReturnsAsync(existente);
+        repo.Setup(r => r.Update(It.IsAny<Municipio>())).ReturnsAsync(true);
+        var body = new UpdateCityViewModel { NomeMunicipio = "Santos" };
+
+        var before = DateTime.Now.AddSeconds(-1);
+        var result = await CityEndpoints.UpdateCity(repo.Object, "3550308", body);
+        var after = DateTime.Now.AddSeconds(1);
+
+        var ok = Assert.IsType<Ok<ResultViewModel<Municipio>>>(result.Result);
+        Assert.InRange(ok.Value!.Data!.ModificadoEm, before, after);
+    }
+
+    [Fact]
+    public void FormatCity_MapsAllFields()
+    {
+        var m = new Municipio
+        {
+            CodigoIBGE = "3550308",
+            NomeMunicipio = "São Paulo",
+            Estado = new Estado { NomeUF = "São Paulo", SiglaUF = "SP" }
+        };
+
+        var vm = CityEndpoints.FormatCity(m);
+
+        Assert.Equal("3550308", vm.CodigoIBGE);
+        Assert.Equal("São Paulo", vm.NomeMunicipio);
+        Assert.Equal("São Paulo", vm.NomeEstado);
+        Assert.Equal("SP", vm.SiglaEstado);
+    }
 }
